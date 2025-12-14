@@ -1,0 +1,62 @@
+.postEdit {
+  border: 1px solid rgb(212, 204, 204);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.postEditor {
+  border: 1px solid rgb(212, 204, 204);
+  border-radius: 5px;
+  padding: 5px;
+  outline: none;
+}
+.postEditor:focus {
+  border: 3px solid #007bff;
+}
+.post {
+  border: 1px solid rgb(212, 204, 204);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form_control {
+  width: 100%;
+  padding: 5px;
+  border: 3px solid rgb(212, 204, 204);
+  outline: none;
+  border-radius: 5px;
+}
+.form_control:focus {
+  border: 3px solid #007bff;
+}
+.hyperlink {
+  color: black;
+}
+.hyperlink:hover {
+  text-decoration: none;
+  color: black;
+}
+.timestamp {
+  color: rgb(117, 110, 110);
+}
+.likes {
+  padding: 0px 10px 0px 0px;
+  width: 20px;
+  background-color: transparent;
+  border: none;
+  color: #ff0000;
+  outline: none;
+}
+.likes:focus {
+  border: none;
+  outline: none;
+}
+.hidden {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}

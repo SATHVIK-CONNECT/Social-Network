@@ -1,0 +1,103 @@
+{% extends "network/layout.html" %} {% block body %}
+<h2>All Posts</h2>
+
+{% if user.is_authenticated %}
+
+<form class="postEdit mx-2 px-5 py-4 mt-3" method="POST" action="{% url  'createPost' %}">
+  <h4>New Post</h4>
+
+  {% csrf_token %}
+  <textarea
+    name="content"
+    id="content"
+    cols="100"
+    rows="3"
+    class="postEditor"
+    placeholder="What's on your mind..."
+  ></textarea>
+
+  <button type="submit" class="btn btn-primary col-1">Post</button>
+</form>
+{% endif %} {% for post in potp %}
+<div class="row m-2 post p-3">
+  <h5 class="my-2">
+    <a href="{% url 'profile' user_id=post.user.id %}" class="hyperlink">{{ post.user }}</a>
+  </h5>
+  <div class="mt-2">
+    {% if user.is_authenticated %} {% if user == post.user %}
+    <a
+      class="text-primary"
+      id="edit_option_{{post.id}}"
+      onclick="editOption('{{post.id}}'), activateFocus('{{post.id}}')"
+      >Edit</a
+    >
+    {% endif %}{% endif %}
+    <h6 id="content_{{ post.id }}" class="my-1">{{ post.content }}</h6>
+    <div class="hidden">
+      <textarea id="text_{{post.id}}" class="form_control" style="display: none">
+{{post.content}}</textarea
+      >
+      <button
+        id="save_{{post.id}}"
+        class="btn btn-primary"
+        style="display: none"
+        onclick="saveContent('{{post.id}}')"
+      >
+        Save
+      </button>
+    </div>
+    <p class="timestamp my-1">{{ post.timestamp }}</p>
+    {% if user.is_authenticated %} {% else %}
+    <p class="m-0 p-0">
+      <span
+        style="font-family: sans-serif; font-weight: 300; margin-right: 5px"
+        id="like_count_{{post.id}}"
+        >{{ post.likes_count }}</span
+      >{% if post.likes_count == 1 %}Like{% else %}Likes{% endif %}
+    </p>
+    {% endif %} {% if user.is_authenticated %} {% if user == post.user %}
+    <p class="m-0 p-0">
+      <span
+        style="font-family: sans-serif; font-weight: 300; margin-right: 5px"
+        id="like_count_{{post.id}}"
+        >{{ post.likes_count }}</span
+      >{% if post.likes_count == 1 %}Like{% else %}Likes{% endif %}
+    </p>
+    {% endif %}{% endif %}
+  </div>
+  <div class="mb-3 ml-1">
+    {% if user.is_authenticated %} {% if user != post.user %} {% if post.id in liked_users %}
+    <button
+      class="fa-solid fa-heart likes"
+      id="{{ post.id }}"
+      onclick="likes('{{ post.id }}', '{{ liked_users }}')"
+    ></button>
+    {% else %}
+
+    <button
+      class="fa-regular fa-heart likes"
+      id="{{ post.id }}"
+      onclick="likes('{{ post.id }}', '{{ liked_users }}')"
+    ></button>
+
+    {% endif %}
+    <span style="font-family: sans-serif; font-weight: 300" id="like_count_{{post.id}}"
+      >{{ post.likes_count }}</span
+    >{% endif %}{% endif %}
+  </div>
+</div>
+{% endfor %}
+<nav aria-label="Page navigation example">
+  <ul class="pagination d-flex justify-content-center">
+    {% if potp.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ potp.previous_page_number }}">Previous</a>
+    </li>
+    {% endif %} {% if potp.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ potp.next_page_number }}">Next</a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+{% endblock %}

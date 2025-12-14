@@ -1,0 +1,47 @@
+{% extends "network/layout.html" %} {% block body %}
+<h2>Following Posts</h2>
+
+{% for post in potp %}
+<div class="row m-2 post p-3 mt-3">
+  <h5 class="mt-1 mb-3">
+    <a href="{% url 'profile' user_id=post.user.id %}" class="hyperlink">{{ post.user }}</a>
+  </h5>
+  <div class="mt-2">
+    <h6>{{ post.content }}</h6>
+    <p class="timestamp my-1">{{ post.timestamp }}</p>
+
+    <div>
+      {% if post.id in liked_users %}
+      <button
+        class="fa-solid fa-heart likes"
+        id="{{ post.id }}"
+        onclick="likes('{{ post.id }}', '{{ liked_users }}')"
+      ></button>
+      {% else %}
+      <button
+        class="fa-regular fa-heart likes"
+        id="{{ post.id }}"
+        onclick="likes('{{ post.id }}', '{{ liked_users }}')"
+      ></button>
+      {% endif %}
+      <span style="font-family: sans-serif; font-weight: 300" id="like_count_{{post.id}}"
+        >{{ post.likes_count }}</span
+      >
+    </div>
+  </div>
+</div>
+{% endfor %}
+<nav aria-label="Page navigation example">
+  <ul class="pagination d-flex justify-content-center">
+    {% if potp.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ potp.previous_page_number }}">Previous</a>
+    </li>
+    {% endif %} {% if potp.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ potp.next_page_number }}">Next</a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+{% endblock %}

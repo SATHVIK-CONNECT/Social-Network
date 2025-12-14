@@ -1,0 +1,78 @@
+{% extends "network/layout.html" %} {% block body %}
+
+<h2>{{ userName }}</h2>
+<div class="container">
+  <div class="row d-flex justify-content-center">
+    <h3 class="col-4">Followers: {{ follower.count }}</h3>
+    <h3 class="col-4">Following: {{ following.count }}</h3>
+    {% if user.is_authenticated %} {% if user != user_profile %} {% if is_following %}
+    <form action="{% url 'unfollowOption' %}" method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="follow_input" value="{{ user_profile }}" />
+      <button type="submit" class="btn btn-danger">Unfollow</button>
+    </form>
+    {% else %}
+    <form action="{% url 'followOption' %}" method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="follow_input" value="{{ user_profile }}" />
+      <button type="submit" class="btn btn-primary">Follow</button>
+    </form>
+    {% endif %} {% endif %} {% endif %}
+  </div>
+</div>
+<br /><br />
+{% for post in potp %}
+<div class="row m-2 post p-3">
+  <h5 class="my-2">
+    <a href="{% url 'profile' user_id=post.user.id %}" class="hyperlink">{{ post.user }}</a>
+  </h5>
+  <div class="mt-2">
+  {% if user.is_authenticated %} {% if user == post.user %}
+    <a
+      class="text-primary"
+      id="edit_option_{{post.id}}"
+      onclick="editOption('{{post.id}}'), activateFocus('{{post.id}}')"
+    >
+      Edit
+    </a>
+    {% endif %}{% endif %}
+    <h6 class="my-1" id="content_{{ post.id }}">{{ post.content }}</h6>
+    <div class="hidden">
+      <textarea id="text_{{post.id}}" class="form_control" style="display: none" autofocus>
+{{post.content}}</textarea
+      >
+      <button
+        id="save_{{post.id}}"
+        class="btn btn-primary"
+        style="display: none"
+        onclick="saveContent('{{post.id}}')"
+      >
+        Save
+      </button>
+    </div>
+    <p class="timestamp my-1">{{ post.timestamp }}</p>
+
+    <p>
+      <span
+        style="color: #000000; font-family: sans-serif; font-weight: 300"
+        id="like_count_{{post.id}}"
+        >{{ post.likes_count }}</span
+      >
+      {% if post.likes_count == 1 %} Like {% else %} Likes {% endif %}
+    </p>
+  </div></div>
+{% endfor %}
+<nav aria-label="Page navigation example">
+  <ul class="pagination d-flex justify-content-center">
+    {% if potp.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ potp.previous_page_number }}">Previous</a>
+    </li>
+    {% endif %} {% if potp.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ potp.next_page_number }}">Next</a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+{% endblock %}
